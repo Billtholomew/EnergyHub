@@ -14,11 +14,13 @@ def load_test(fName):
   trueSets = {}
   with open(fName,'rb') as f:
     reader = csv.reader(f)
-    reader.next()
+    header = reader.next()
+    _,attrTypes,_ = header[0],header[1:-1],header[-1]
     # skip header
     for row in reader:
       # memberships is the sets that the card is a member of
-      cid,color,shape,shading,number,taste,memberships = row
+      # a row in the csv is the card id, followed by N attributes, and a membership
+      cid,attrData,memberships = row[0],row[1:-1],row[-1]
       memberships = memberships.split('|')
       cid = int(cid)
       # test data is always kept in increasing cid, so final sets will be ordered
@@ -30,12 +32,7 @@ def load_test(fName):
         trueSets[m].append(cid)
       # load attributes into a new card
       # add card to deck
-      attributes = {}
-      attributes['Color'] = color
-      attributes['Shape'] = shape
-      attributes['Shading'] = shading
-      attributes['Number'] = number
-      attributes['Taste'] = taste
+      attributes = dict(zip(attrTypes,attrData))
       c = setFinder.Card(cid,attributes)
       deck[cid] = c
   return deck,trueSets
