@@ -15,11 +15,12 @@ class Card:
 #############################################
 ## MAIN FUNCTIONS ##
 
-def find_all_sets(deck,n=3):
+# board is the group of cards that sets should be found in
+def find_all_sets(board,n=3):
   # iterate through all combinations of n SET cards
   # note that this only creates combinations of cids
-  for cids in combinations(deck.keys(),n):
-    cards = [deck[c] for c in cids]
+  for cids in combinations(board.keys(),n):
+    cards = [board[c] for c in cids]
     # assume all cards will have the same attributes, so just pull from first card
     attributes = cards[0].attributes.keys() 
     validSet = True

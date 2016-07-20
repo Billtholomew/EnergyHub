@@ -3,7 +3,7 @@ import sys
 import setFinder
 
 def load_test(fName):
-  deck = {}
+  board = {}
   trueSets = {}
   with open(fName,'rb') as f:
     reader = csv.reader(f)
@@ -24,18 +24,18 @@ def load_test(fName):
           trueSets[m] = []
         trueSets[m].append(cid)
       # load attributes into a new card
-      # add card to deck
+      # add card to board
       attributes = dict(zip(attrTypes,attrData))
       c = setFinder.Card(cid,attributes)
-      deck[cid] = c
-  return deck,trueSets
+      board[cid] = c
+  return board,trueSets
 
 def run_test(fName,n=3):
   print 'Running test:',fName
   ##
   # Process data
-  deck,trueSets = load_test(fName)
-  foundSets = [f for f in setFinder.find_all_sets(deck,n)]
+  board,trueSets = load_test(fName)
+  foundSets = [f for f in setFinder.find_all_sets(board,n)]
   # sets in both
   matches = [ts for ts in trueSets.values() if ts in foundSets]
   # missing expected sets
