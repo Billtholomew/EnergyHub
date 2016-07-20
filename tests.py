@@ -1,13 +1,6 @@
 import csv
+import sys
 import setFinder
-
-###############################################
-## TESTS ##
-# test_1 - Each Attribute Changes, 4 card sets
-# test_2 - 4 Cards, 3 card sets
-# test_3 - No sets, 4 card sets
-# test_4 - 3 card sets, 4 changing attribbutes
-# test_5 - Based on image, 3 card sets, 5 attributes, Flavor attribute has 6 values
 
 def load_test(fName):
   deck = {}
@@ -39,26 +32,58 @@ def load_test(fName):
 
 def run_test(fName,n=3):
   print 'Running test:',fName
+  ##
+  # Process data
   deck,trueSets = load_test(fName)
   foundSets = [f for f in setFinder.find_all_sets(deck,n)]
+  # sets in both
+  matches = [ts for ts in trueSets.values() if ts in foundSets]
   # missing expected sets
   mes = [ts for ts in trueSets.values() if ts not in foundSets]
   # sets found not expected
   ues = [fs for fs in foundSets if fs not in trueSets.values()]
+  ##
+  # Output results
+  print '# Sets Found:',len(foundSets)
+  print '# Sets Expected:',len(trueSets)
+  print '# Sets in Both:',len(matches)
+  if len(matches) is not len(trueSets):
+    print 'Issue Detected, See below'
   if len(mes)>0:
     print 'Missing Sets:',len(mes)
     for m in mes:
-      print m
+      print '>',m
   if len(ues)>0:
     print 'Unexpectedly Found Sets:',len(ues)
     for u in ues:
-      print u
+      print '>',u
   if len(mes)==0 and len(ues)==0:
     print 'No issues detected'
+  print '---------------------------'
   return mes,ues
 
-run_test('TestData/test_1.csv',4)
-run_test('TestData/test_2.csv',3)  
-run_test('TestData/test_3.csv',4)
-run_test('TestData/test_4.csv',3)
-run_test('TestData/test_5.csv',3)
+###############################################
+## TESTS ##
+# test_1 - Each Attribute Changes, 4 card sets
+# test_2 - 4 Cards, 3 card sets
+# test_3 - No sets, 4 card sets
+# test_4 - 3 card sets, 4 attribbutes each with 3 values
+# test_5 - 3 card sets, 5 attributes, Flavor attribute has 6 values
+
+# run all 4 tests
+if __name__=="__main__":
+  args = sys.argv[1:3]
+  if len(args)==0:
+    run_test('TestData/test_1.csv',4)
+    run_test('TestData/test_2.csv',3)  
+    run_test('TestData/test_3.csv',4)
+    run_test('TestData/test_4.csv',3)
+    run_test('TestData/test_5.csv',3)
+  else:
+    try:
+      testFile,setSize = args
+      setSize = int(setSize)
+      run_test(testFile,setSize)
+    except Exception as e:
+      print e
+      
