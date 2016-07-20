@@ -17,10 +17,11 @@ class Card:
 
 def find_all_sets(deck,n=3):
   # iterate through all combinations of n SET cards
+  # note that this only creates combinations of cids
   for cids in combinations(deck.keys(),n):
     cards = [deck[c] for c in cids]
-    # check the cards to see if they are a set
-    attributes = cards[0].attributes.keys() # assume all cards will have the same attributes
+    # assume all cards will have the same attributes, so just pull from first card
+    attributes = cards[0].attributes.keys() 
     validSet = True
     for a in attributes:
       # get the values for the current attribute for all cards
